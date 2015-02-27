@@ -9,8 +9,7 @@ package Engine.GUI;
 import Engine.Graphics;
 import Engine.Mouse;
 import Engine.Vector2D;
-import G4Pong.GamePanel;
-import java.awt.Color;
+import Engine.Color;
 
 /**
  * Handles the scrolling of a custom component.

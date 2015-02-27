@@ -8,9 +8,8 @@ package Engine.Geometry;
 
 import Engine.Graphics;
 import Engine.Vector2D;
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 /**
  * A Generic shape definition used for collision detection and shape representation. 

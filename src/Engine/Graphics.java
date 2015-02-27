@@ -219,6 +219,12 @@ public interface Graphics
      * @param height - height of the clipping rectangle
      */
     public void setClip(int x, int y, int width, int height);
+    /**
+     * Sets the drawing clip of the graphics context. Drawing does not occur
+     * outside the clip     * 
+     * @param r the rectangle where the x,y,width,height represent the clipping area
+     */
+    public void setClip(Rectangle r);
 //</editor-fold>     
     //<editor-fold defaultstate="collapsed" desc="getClip">
     /**

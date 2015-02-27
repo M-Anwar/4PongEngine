@@ -296,12 +296,19 @@ public class Java2DGraphics implements Graphics
      * @param height - height of the clipping rectangle
      */
     public void setClip(int x, int y, int width, int height) {
-        g.setClip(x,y,width,height);       
+        g.setClip(x,y,width,height);         
+    }
+    
+    @Override
+    public void setClip(Rectangle r){
+        if(r==null)g.setClip(null);
+        else
+            g.setClip((int)r.getPosition().x,(int) r.getPosition().y, (int)r.getWidth(), (int)r.getHeight());
     }
 
     @Override    
-    public Rectangle getClip() {
-        java.awt.Rectangle rect = g.getClipBounds();
+    public Engine.Geometry.Rectangle getClip() {        
+        java.awt.Rectangle rect = g.getClipBounds();       
         if(rect ==null)return null;
         return new Rectangle(rect.x,rect.y,rect.width,rect.height);
    }

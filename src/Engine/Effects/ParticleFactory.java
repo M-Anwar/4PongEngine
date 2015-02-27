@@ -8,7 +8,7 @@ package Engine.Effects;
 
 import Engine.Graphics;
 import Engine.Vector2D;
-import java.awt.Color;
+import Engine.Color;
 import java.util.ArrayList;
 
 /**

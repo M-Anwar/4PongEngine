@@ -9,6 +9,7 @@ package G4Pong;
 
 import Engine.Java2DImage;
 import Engine.Utils;
+import GameStates.TestBench.MTestBench;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Point;
@@ -29,9 +30,11 @@ public class Main extends JFrame{
         this.setTitle("4Pong");
         Image icon = ((Java2DImage)Utils.loadJava2DImage("/icon.png")).image;
         this.setIconImage(icon);
-        this.add((new GamePanel()));            
+        GamePanel panel = new GamePanel();
+        panel.setInitialState(new MTestBench());
+        this.add(panel);           
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
+        this.setResizable(true);
         this.setUndecorated(!debug);
         this.pack();
         this.setLocationRelativeTo(null);

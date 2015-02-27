@@ -8,7 +8,7 @@ package Engine.Effects;
 
 import Engine.Graphics;
 import Engine.ImageLoader;
-import java.awt.Color;
+import Engine.Color;
 
 /**
  *

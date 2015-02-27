@@ -7,8 +7,8 @@
 package Engine;
 
 import G4Pong.GamePanel;
+import GameStates.TestBench.GPTestBench;
 import GameStates.TestBench.MTestBench;
-import java.awt.Color;
 
 /**
  * A manager class which delegates the act of drawing and updating the screen.
@@ -21,25 +21,26 @@ import java.awt.Color;
  */
 public class GameStateManager 
 {
-    private GameState gameState;
-    private int currentState;
+    private GameState gameState;      
    
-    public static final int MTEST_STATE = 1;
-   
+    public GameStateManager(GameState initState){
+       setState(initState);
+    }
     public GameStateManager() {
-        currentState = MTEST_STATE;
-        loadState(currentState);
+        this(null);
     }
-
-    private void loadState(int state) {
-            if(state == MTEST_STATE)
-                    gameState =new MTestBench(this);       
-
-    }
-
-    public void setState(int state) {
-            currentState = state;
-            loadState(currentState);
+    
+    public void setState(GameState state) {         
+            if(gameState!=null)
+            {
+                gameState.dispose();    
+            }            
+            if(state!=null){
+                state.setGSM(this);
+                state.init();              
+            }            
+            gameState = state;           
+            
     }
 
     public void update(float delta) {

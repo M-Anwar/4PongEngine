@@ -5,6 +5,7 @@
  */
 package Engine.GUI;
 
+import Engine.Color;
 import Engine.Geometry.Rectangle;
 import Engine.Graphics;
 import Engine.KeyListener;
@@ -13,7 +14,6 @@ import Engine.Mouse;
 import Engine.StringBuilder;
 import Engine.Vector2D;
 import G4Pong.GamePanel;
-import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -61,6 +61,9 @@ public class TextBox extends Component implements KeyListener, Scrollable{
     private boolean isMultiLine= false;
     private boolean isEditable =true;
     private int maxChars=0;
+    
+    //Cached
+    private Rectangle clip;
     
     private float prefferedHeight;
     private float prefferedWidth;
@@ -114,6 +117,7 @@ public class TextBox extends Component implements KeyListener, Scrollable{
     @Override
     public void draw(Graphics g)
     {          
+        clip = g.getClip();
         g.setClip((int)this.position.x, (int)this.position.y, (int)width+1, (int)height+1);        
         g.setFont(this.getFont(), Graphics.BOLD, this.fontSize);        
         //Border and background
@@ -160,7 +164,9 @@ public class TextBox extends Component implements KeyListener, Scrollable{
             g.drawLine(caretPos.x, caretPos.y, caretPos.x, caretPos.y + stringHeight);
         }
         scroll.draw(g);
-        g.setClip(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
+        
+        g.setClip(clip);
+        //g.setClip(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
     }   
     
     //Getter and Setter Methods    

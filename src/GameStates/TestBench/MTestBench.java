@@ -23,7 +23,7 @@ import Engine.Mouse;
 import Engine.Vector2D;
 import Engine.ImageLoader;
 import G4Pong.GamePanel;
-import java.awt.Color;
+import Engine.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -47,24 +47,20 @@ public class MTestBench extends GameState
     
     Camera cam;
     int state;
-    
-    public MTestBench(GameStateManager gsm) {
-        super(gsm);               
-    }
+      
 
     @Override
     public void init() {    
-        state = 1;
-        
+        state = 1;        
         btnClose = new GameButton("X", GamePanel.WIDTH - 50, 20);       
         addComponent(btnClose);      
         btnClose.addButtonListener(new ButtonListener(){//X button to go back to options
             @Override
             public void buttonClicked() {                
-                System.exit(0);
+                setState(new GPTestBench());
             }
         });   
-        
+       
         cam = new Camera(new Vector2D(GamePanel.WIDTH/2,GamePanel.HEIGHT/2),new Rectangle(0,0,GamePanel.WIDTH,GamePanel.HEIGHT));
         rect = new Rectangle(GamePanel.WIDTH/2-100, GamePanel.HEIGHT/2-200, 80,20);
         rect1 = new Rectangle(GamePanel.WIDTH/2-100, GamePanel.HEIGHT/2-100,80,20);
@@ -118,7 +114,7 @@ public class MTestBench extends GameState
     
     @Override
     public void update(float delta)
-    {
+    {        
         cam.update(delta);
         cam.moveTo(rect.getPosition());        
         handleInput();
@@ -173,16 +169,16 @@ public class MTestBench extends GameState
             //</editor-fold>
         }
         else if (state ==2)
-        {
+        {            
             //<editor-fold defaultstate="collapsed" desc="Text Box testing">
-            g.drawImage(0, 0, ImageLoader.BACKGROUND, GamePanel.WIDTH,GamePanel.HEIGHT);
+            g.drawImage(0, 0, ImageLoader.TITLE, GamePanel.WIDTH,GamePanel.HEIGHT);
             g.setColor(new Color(77,77,77).getRGB());
             g.fillRect(0, 0, GamePanel.WIDTH, 80);
             g.setColor(Color.WHITE.getRGB());
             g.setFont("Arial",Graphics.BOLD,25);
             g.drawString("Text Box Test bench", 10, 40);
             g.setFont("Arial",Graphics.PLAIN,15);
-            g.drawString("Basic Chat infrastructure - has two text boxes which communicate with each other", 10, 60);
+            g.drawString("Basic Chat infrastructure - has two text boxes which communicate with each other", 10, 60);            
 //</editor-fold>
         }           
         

@@ -12,7 +12,7 @@ import Engine.Mouse;
 import Engine.StringBuilder;
 import Engine.Vector2D;
 import G4Pong.GamePanel;
-import java.awt.Color;
+import Engine.Color;
 /**
  * The basic component for all GUI elements.
  * Manages the basic animation for all the elements in terms of positioning.

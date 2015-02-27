@@ -8,8 +8,7 @@ package Engine.GUI;
 
 import Engine.Graphics;
 import Engine.Mouse;
-import G4Pong.GamePanel;
-import java.awt.Color;
+import Engine.Color;
 import Engine.StringBuilder;
 
 /**

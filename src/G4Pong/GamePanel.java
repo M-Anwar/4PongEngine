@@ -8,14 +8,17 @@ package G4Pong;
 
 import Engine.Audio.Audio;
 import Engine.Audio.JavaAudio;
+import Engine.Color;
+import Engine.GameState;
 import Engine.GameStateManager;
 import Engine.Graphics;
 import Engine.Java2DGraphics;
 import Engine.Keys;
 import Engine.Mouse;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -33,14 +36,8 @@ import javax.swing.SwingUtilities;
 public class GamePanel extends JPanel implements Runnable,MouseListener, MouseMotionListener, KeyListener
 {
     //Width and Height of the Panel
-    public static final int WIDTH =1024;
-    public static final int HEIGHT = 720;
-//    public static final int WIDTH =1920;
-//    public static final int HEIGHT = 1080;
-    
-    //The dimensions of the actual pong game (defined here for convenience)
-    public static final int GAMEWIDTH = HEIGHT-10;
-    public static final int GAMEHEIGHT = HEIGHT-10;
+    public static int WIDTH =1024;
+    public static int HEIGHT = 720;  
     
     //Game loop speeds
     public static final int NORMAL =    100000000;
@@ -48,16 +45,16 @@ public class GamePanel extends JPanel implements Runnable,MouseListener, MouseMo
     public static final int FAST =      10000000;
     
     //Game-loop variables
-    private static int speed = NORMAL;
+    protected static int speed = NORMAL;
     private Thread thread;
-    private boolean running;
-    private final int FPS = 60;
+    protected boolean running;
+    protected final int FPS = 60;
     private final long targetTime = 1000/FPS;
     
     //FPS information
-    private float actualFPS;
-    private float averageFPS;
-    private static final int SAMPLES = 60;
+    protected float actualFPS;
+    protected float averageFPS;
+    protected static final int SAMPLES = 60;
     private float[] averageFPSSamples = new float[SAMPLES+1];
     private int tickIndex=0;
     private float tickSum =0;
@@ -68,17 +65,38 @@ public class GamePanel extends JPanel implements Runnable,MouseListener, MouseMo
     private Engine.Graphics g;  
     
     //The game state manager resposible for delegating drawing and updating
-    GameStateManager gsm;
+    protected GameStateManager gsm;
+    protected GameState initial;
     
     //Audio Engine Handle
-    private static Audio gameAudio;
+    protected static Audio gameAudio;
+    
+    //Parent JFrame
     public static JFrame parent;
     
-    public GamePanel()
-    {
+    public GamePanel(){
+        this(null);
+    }
+    public GamePanel(GameState initial)
+    {               
         this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
         this.setFocusable(true);
-        this.requestFocus();           
+        this.requestFocus(); 
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                WIDTH = getWidth();
+                HEIGHT = getHeight();                
+                updateSize(WIDTH,HEIGHT);
+            }
+          });
+        this.initial = initial;
+        gsm = new GameStateManager(this.initial);    
+    }
+    private void updateSize(int argWidth, int argHeight) {
+        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = (Graphics2D) image.getGraphics();        
+        g = new Java2DGraphics(g2d);
     }
     @Override
     public void addNotify() {
@@ -94,22 +112,18 @@ public class GamePanel extends JPanel implements Runnable,MouseListener, MouseMo
         }
     }
     
-    private void init() {
+    private void init() {        
         System.setProperty("sun.java2d.opengl","true");
-        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = (Graphics2D) image.getGraphics();        
-        g = new Java2DGraphics(g2d);
+        updateSize(WIDTH,HEIGHT);       
         running = true;	        
         gameAudio = new JavaAudio();
             try {
                 //Load Audio here - Might be changed to a loader in the future                
-                gameAudio.load("/res/button2.wav","BUTTON");               
+                gameAudio.load("/res/button.wav","BUTTON");               
                 gameAudio.setMute(true);
             } catch (Exception ex) {
                 System.out.println("Unable to load audio: " + ex.getMessage());
-            }
-        
-        gsm = new GameStateManager();
+            }               
     }    
     
     @Override
@@ -188,6 +202,10 @@ public class GamePanel extends JPanel implements Runnable,MouseListener, MouseMo
      */
     public static void setPlaySpeed(int playSpeed){speed = playSpeed;}
     
+    public void setInitialState(GameState init){        
+        if (this.initial==null) initial = init;
+        this.gsm.setState(init);
+    }
     /**
      * Returns the audio engine of the game
      * @return 

@@ -24,19 +24,23 @@ public abstract class GameState
     //from a list while it is still being iterated over in the update/draw loop
     private ArrayList<Component> removeComponents; 
     private ArrayList<Component> addComponents; 
-
-    public GameState(GameStateManager gsm) {
-        this.gsm = gsm;
+    
+    public GameState() {          
         components = new ArrayList<>();
         removeComponents = new ArrayList<>();
-        addComponents = new ArrayList<>();
-
-        init();            
+        addComponents = new ArrayList<>();               
     }
-
+    
+    /** Called at construction of the GameState, all initialization should go here **/
     public abstract void init();
+    /** Called every frame to update any logic
+     * @param delta the time passed between the last frame and now**/    
     public abstract void update(float delta);
+    /** Called every frame to draw to the screen 
+     * @param g the graphics context to draw to*/
     public abstract void draw(Graphics g);
+    /** A utility method that can be used to handle input. The user calls this
+     method on their own if they want to. Or they can simply leave it empty**/
     public abstract void handleInput();
     
     public void internalUpdate(float delta){
@@ -59,18 +63,35 @@ public abstract class GameState
     }
     
     /**
+     * Dispose method where you clean up any resources that might be used 
+     * by the current game state. The dispose method is called when switching
+     * states by the GameStateManager. If overriding, one MUST call super.dispose()
+     * or else GUI components will not be disposed of properly.
+     */
+    public void dispose(){
+        for(Component c: components)
+            c.dispose();
+    }
+    /**
      * Switch the current gameState.
      * Will immediately switch the current game state to another one.
      * The parameter should be taken from the list of static values in 
      * GameStateManager. (POSSIBLE CHANGE IN FUTURE)
      * @param state GameStateManager.INTRO etc, the int representing the state.
      */
-    public void setState(int state)
-    {
-        for(Component c: components)
-            c.dispose();
-        this.gsm.setState(state);
+    public void setState(GameState state)
+    {        
+        if(this.gsm!=null)
+            this.gsm.setState(state);
     }   
+    
+    /**
+     * Set the GameStateManager of the current gamestate.
+     * This method should not be called by the user and is called internally
+     * to set the manager after state construction.
+     * @param g 
+     */
+    public void setGSM(GameStateManager g){this.gsm =g ;}
     
     /**
      * Add a specific component to the game state
